@@ -1,7 +1,7 @@
-# CipherCraft - Password Generator
+# CypherCraft - Password Generator
 
 ## Description
-CipherCraft is a password generator tool that allows you to create strong, customizable passwords based on different types:
+CypherCraft is a password generator tool that allows you to create strong, customizable passwords based on different types:
 - **Standard Password** (upper/lowercase letters, digits, special characters)
 - **Passphrase** (a combination of random words)
 - **PIN** (numeric only)
