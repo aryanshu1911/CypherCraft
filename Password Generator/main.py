@@ -61,7 +61,14 @@ def generate_password():
     elif password_type == "PIN":
         # Generate a PIN (numerical only)
         char_pool = string.digits
-    
+        # No strength evaluation for PIN
+        password = ''.join(secrets.choice(char_pool) for _ in range(length))
+        password_display.config(state=tk.NORMAL)
+        password_display.delete(0, tk.END)
+        password_display.insert(0, password)
+        password_display.config(state=tk.DISABLED)
+        return
+
     elif password_type == "API Key":
         # API Key with alphanumeric + special characters (32 characters)
         char_pool = string.ascii_letters + string.digits + string.punctuation
@@ -128,7 +135,7 @@ password_type_menu = ttk.Combobox(root, textvariable=password_type_var, values=[
 password_type_menu.grid(row=0, column=1, padx=10, pady=5)
 
 # Label for Password Length
-password_length_label = tk.Label(root, text="Password Length:")
+password_length_label = tk.Label(root, text="Set Length:")
 password_length_label.grid(row=1, column=0, padx=10, pady=5)
 
 # Entry for Password Length
