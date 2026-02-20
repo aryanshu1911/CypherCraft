@@ -198,7 +198,3 @@ CypherCraft/
 This project is open-source under the MIT License.
 
 ---
-
-<p align="center">
-  <strong>🛡️ CypherCraft: The Password Guardian</strong> — Your passwords never leave your device.
-</p>
