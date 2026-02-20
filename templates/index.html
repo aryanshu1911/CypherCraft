@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CypherCraft: The Password Guardian — Privacy-First Password Analyzer & Generator</title>
+    <meta name="description"
+        content="Analyze password strength, check for breaches, and generate secure passwords — all without ever exposing your data." />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            900: '#0a0e1a',
+                            800: '#111827',
+                            700: '#1e293b',
+                            600: '#334155',
+                            500: '#475569',
+                            accent: '#06b6d4',
+                            glow: '#22d3ee',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body class="bg-cyber-900 text-gray-100 font-sans min-h-screen">
+
+    <!-- ─── Header ──────────────────────────────────────────── -->
+    <header class="border-b border-cyber-600/50 backdrop-blur-sm bg-cyber-900/80 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-xl flex items-center justify-center text-xl shadow-lg shadow-cyan-500/20">
+                    🛡️
+                </div>
+                <div>
+                    <h1
+                        class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                        CypherCraft
+                    </h1>
+                    <p class="text-xs text-gray-500">Privacy-First Security Tool</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                All processing is local
+            </div>
+        </div>
+    </header>
+
+    <!-- ─── Main Content ────────────────────────────────────── -->
+    <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+
+        <!-- ═══ Section 1: Password Analyzer ═══════════════════ -->
+        <section class="card bg-cyber-800 border border-cyber-600/30 rounded-2xl p-6 shadow-xl">
+            <div class="flex items-center gap-2 mb-6">
+                <span class="text-2xl">🔍</span>
+                <h2 class="text-lg font-semibold text-cyan-400">Password Analyzer</h2>
+            </div>
+
+            <!-- Input -->
+            <div class="relative mb-6">
+                <input id="analyzer-input" type="password" placeholder="Type a password to analyze..."
+                    autocomplete="off"
+                    class="w-full bg-cyber-900 border border-cyber-600/50 rounded-xl px-4 py-3 pr-12 text-gray-100 font-mono text-sm placeholder-gray-600 transition-all duration-200" />
+                <button id="analyzer-toggle"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-lg hover:scale-110 transition-transform cursor-pointer"
+                    title="Toggle visibility">👁️</button>
+            </div>
+
+            <!-- Strength Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm text-gray-400">Strength</span>
+                    <span id="strength-label" class="text-sm font-semibold" style="color: #94a3b8;">—</span>
+                </div>
+                <div class="w-full bg-cyber-900 rounded-full h-2 overflow-hidden">
+                    <div id="strength-bar" class="strength-bar" style="width: 0%; background-color: #475569;"></div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-cyber-900/60 rounded-xl p-3 text-center">
+                    <p class="text-xs text-gray-500 mb-1">Entropy</p>
+                    <p id="entropy-value" class="text-lg font-mono font-semibold text-cyan-400">—</p>
+                </div>
+                <div class="bg-cyber-900/60 rounded-xl p-3 text-center">
+                    <p class="text-xs text-gray-500 mb-1">Crack Time</p>
+                    <p id="crack-time-value" class="text-lg font-mono font-semibold text-orange-400">—</p>
+                </div>
+                <div class="bg-cyber-900/60 rounded-xl p-3 text-center">
+                    <p class="text-xs text-gray-500 mb-1">Charset Size</p>
+                    <p id="charset-value" class="text-lg font-mono font-semibold text-purple-400">—</p>
+                </div>
+                <div class="bg-cyber-900/60 rounded-xl p-3 text-center">
+                    <p class="text-xs text-gray-500 mb-1">Length</p>
+                    <p id="length-value" class="text-lg font-mono font-semibold text-green-400">0</p>
+                </div>
+            </div>
+
+            <!-- Policy Checklist -->
+            <div class="bg-cyber-900/40 rounded-xl p-4">
+                <p class="text-xs text-gray-500 mb-3 uppercase tracking-wider">Policy Checklist</p>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-2 text-sm">
+                    <div id="policy-length" class="flex items-center gap-2 policy-fail">
+                        <span class="policy-icon">⬜</span>
+                        <span class="policy-text">≥ 8 chars</span>
+                    </div>
+                    <div id="policy-upper" class="flex items-center gap-2 policy-fail">
+                        <span class="policy-icon">⬜</span>
+                        <span class="policy-text">Uppercase</span>
+                    </div>
+                    <div id="policy-lower" class="flex items-center gap-2 policy-fail">
+                        <span class="policy-icon">⬜</span>
+                        <span class="policy-text">Lowercase</span>
+                    </div>
+                    <div id="policy-number" class="flex items-center gap-2 policy-fail">
+                        <span class="policy-icon">⬜</span>
+                        <span class="policy-text">Number</span>
+                    </div>
+                    <div id="policy-symbol" class="flex items-center gap-2 policy-fail">
+                        <span class="policy-icon">⬜</span>
+                        <span class="policy-text">Symbol</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ Section 2: Breach Checker ═══════════════════════ -->
+        <section class="card bg-cyber-800 border border-cyber-600/30 rounded-2xl p-6 shadow-xl">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-2xl">🔓</span>
+                <h2 class="text-lg font-semibold text-cyan-400">Breach Checker</h2>
+            </div>
+            <p class="text-xs text-gray-500 mb-6">
+                Uses the <strong class="text-gray-400">k-anonymity</strong> model — your full password hash is <strong
+                    class="text-gray-400">never</strong> sent over the network.
+            </p>
+
+            <!-- Input -->
+            <div class="flex gap-3 mb-4">
+                <div class="relative flex-1">
+                    <input id="breach-input" type="password" placeholder="Enter password to check..." autocomplete="off"
+                        class="w-full bg-cyber-900 border border-cyber-600/50 rounded-xl px-4 py-3 pr-12 text-gray-100 font-mono text-sm placeholder-gray-600 transition-all duration-200" />
+                    <button id="breach-toggle"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-lg hover:scale-110 transition-transform cursor-pointer"
+                        title="Toggle visibility">👁️</button>
+                </div>
+                <button id="breach-button"
+                    class="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap">
+                    🔍 Check
+                </button>
+            </div>
+
+            <!-- Loading -->
+            <div id="breach-loading" class="hidden flex items-center gap-2 text-sm text-gray-400 mb-4">
+                <svg class="animate-spin h-4 w-4 text-cyan-400" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
+                        fill="none"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                Checking securely...
+            </div>
+
+            <!-- Result -->
+            <div id="breach-result" class="hidden bg-cyber-900/60 rounded-xl p-4 flex items-center gap-3">
+                <span id="breach-icon" class="text-2xl"></span>
+                <span id="breach-text" class="text-sm font-medium"></span>
+            </div>
+        </section>
+
+        <!-- ═══ Section 3: Password Generator ═══════════════════ -->
+        <section class="card bg-cyber-800 border border-cyber-600/30 rounded-2xl p-6 shadow-xl">
+            <div class="flex items-center gap-2 mb-6">
+                <span class="text-2xl">⚡</span>
+                <h2 class="text-lg font-semibold text-cyan-400">Password Generator</h2>
+            </div>
+
+            <!-- Type Selector -->
+            <div class="mb-6">
+                <label class="text-xs text-gray-500 uppercase tracking-wider mb-2 block">Type</label>
+                <select id="gen-type"
+                    class="w-full bg-cyber-900 border border-cyber-600/50 rounded-xl px-4 py-3 text-gray-100 text-sm cursor-pointer transition-all duration-200">
+                    <option value="standard">🔑 Standard Password</option>
+                    <option value="pin">🔢 PIN</option>
+                    <option value="passphrase">📝 Passphrase</option>
+                </select>
+            </div>
+
+            <!-- Standard Options -->
+            <div id="standard-options" class="space-y-4 mb-6">
+                <!-- Length Slider -->
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-xs text-gray-500 uppercase tracking-wider">Length</label>
+                        <span id="gen-length-label" class="text-sm font-mono text-cyan-400 font-semibold">16</span>
+                    </div>
+                    <input id="gen-length" type="range" min="8" max="32" value="16"
+                        class="w-full h-2 bg-cyber-900 rounded-full appearance-none cursor-pointer accent-cyan-500" />
+                    <div class="flex justify-between text-xs text-gray-600 mt-1">
+                        <span>8</span>
+                        <span>32</span>
+                    </div>
+                </div>
+
+                <!-- Checkboxes -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    <label
+                        class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer hover:text-gray-100 transition-colors">
+                        <input id="gen-uppercase" type="checkbox" checked class="accent-cyan-500 cursor-pointer" />
+                        Uppercase (A-Z)
+                    </label>
+                    <label
+                        class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer hover:text-gray-100 transition-colors">
+                        <input id="gen-lowercase" type="checkbox" checked class="accent-cyan-500 cursor-pointer" />
+                        Lowercase (a-z)
+                    </label>
+                    <label
+                        class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer hover:text-gray-100 transition-colors">
+                        <input id="gen-numbers" type="checkbox" checked class="accent-cyan-500 cursor-pointer" />
+                        Numbers (0-9)
+                    </label>
+                    <label
+                        class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer hover:text-gray-100 transition-colors">
+                        <input id="gen-symbols" type="checkbox" checked class="accent-cyan-500 cursor-pointer" />
+                        Symbols (!@#$)
+                    </label>
+                    <label
+                        class="flex items-center gap-2 text-sm text-gray-300 cursor-pointer hover:text-gray-100 transition-colors">
+                        <input id="gen-exclude-ambiguous" type="checkbox" class="accent-cyan-500 cursor-pointer" />
+                        Exclude ambiguous
+                    </label>
+                </div>
+            </div>
+
+            <!-- PIN Options -->
+            <div id="pin-options" class="hidden mb-6">
+                <label class="text-xs text-gray-500 uppercase tracking-wider mb-2 block">PIN Length</label>
+                <select id="gen-pin-length"
+                    class="w-full bg-cyber-900 border border-cyber-600/50 rounded-xl px-4 py-3 text-gray-100 text-sm cursor-pointer">
+                    <option value="4">4 digits</option>
+                    <option value="5">5 digits</option>
+                    <option value="6">6 digits</option>
+                </select>
+            </div>
+
+            <!-- Passphrase Options -->
+            <div id="passphrase-options" class="hidden mb-6">
+                <label class="text-xs text-gray-500 uppercase tracking-wider mb-2 block">Word Count</label>
+                <select id="gen-word-count"
+                    class="w-full bg-cyber-900 border border-cyber-600/50 rounded-xl px-4 py-3 text-gray-100 text-sm cursor-pointer">
+                    <option value="3">3 words</option>
+                    <option value="4" selected>4 words</option>
+                    <option value="5">5 words</option>
+                </select>
+            </div>
+
+            <!-- Generated Password Display -->
+            <div class="relative mb-4">
+                <input id="gen-result" type="password" readonly
+                    class="w-full bg-cyber-900 border border-cyan-600/30 rounded-xl px-4 py-4 pr-12 text-cyan-300 font-mono text-base tracking-wider glow-border"
+                    placeholder="Click Generate..." />
+                <button id="gen-toggle"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-lg hover:scale-110 transition-transform cursor-pointer"
+                    title="Toggle visibility">👁️</button>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3">
+                <button id="gen-generate"
+                    class="flex-1 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold py-3 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-cyan-500/20 cursor-pointer">
+                    🔄 Generate
+                </button>
+                <button id="gen-copy"
+                    class="copy-flash bg-cyber-700 hover:bg-cyber-600 text-gray-200 font-semibold px-6 py-3 rounded-xl transition-all duration-200 border border-cyber-600/50 cursor-pointer">
+                    📋 Copy
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ─── Footer ──────────────────────────────────────────── -->
+    <footer class="border-t border-cyber-600/30 mt-12">
+        <div class="max-w-6xl mx-auto px-4 py-6 text-center">
+            <p class="text-xs text-gray-600">
+                🔒 <strong class="text-gray-500">Privacy First</strong> — Passwords are never stored, logged, or
+                transmitted in plaintext.
+                Breach checks use the <a href="https://haveibeenpwned.com/API/v3#PwnedPasswords"
+                    class="text-cyan-600 hover:text-cyan-400 transition-colors" target="_blank">k-anonymity model</a>.
+            </p>
+            <p class="text-xs text-gray-700 mt-2">CypherCraft: The Password Guardian · Academic Mini Project · 2026</p>
+        </div>
+    </footer>
+
+    <!-- Client-side JavaScript -->
+    <script src="/static/script.js"></script>
+</body>
+
+</html>
