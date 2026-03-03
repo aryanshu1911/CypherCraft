@@ -14,7 +14,6 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from pydantic import BaseModel, Field
 from typing import Optional
 
@@ -30,10 +29,6 @@ app = FastAPI(
     description="Privacy-First Password Analyzer & Generator",
     version="1.0.0"
 )
-
-# Force HTTPS in production
-if os.environ.get("FASTAPI_ENV") == "production":
-    app.add_middleware(HTTPSRedirectMiddleware)
 
 # CORS for local development
 app.add_middleware(
