@@ -2,11 +2,13 @@
 
 **Privacy-First Password Analyzer & Generator**
 
+🌐 **Live Demo:** [https://cyphercraft.up.railway.app](https://cyphercraft.up.railway.app)
+
 ---
 
 ## 📄 Abstract
 
-CypherCraft: The Password Guardian is a privacy-first web application that empowers users to evaluate the strength of their passwords, check if they've been exposed in known data breaches, and generate cryptographically secure passwords — all without ever storing, logging, or transmitting passwords in plaintext. The application uses the **k-anonymity model** to query the HaveIBeenPwned API, ensuring that even during breach checks, the full password hash is never sent over the network. Built with a Python FastAPI backend serving a modern HTML/Tailwind/JavaScript frontend, the project demonstrates secure coding practices, client-server architecture, and modern web design principles. It is designed as an academic mini project suitable for demonstration in 5–10 minutes.
+CypherCraft: The Password Guardian is a privacy-first web application that empowers users to evaluate the strength of their passwords, check if they've been exposed in known data breaches, and generate cryptographically secure passwords — all without ever storing, logging, or transmitting passwords in plaintext. The application uses the **k-anonymity model** to query the HaveIBeenPwned API, ensuring that even during breach checks, the full password hash is never sent over the network. Built with a Python FastAPI backend serving a modern HTML/Tailwind/JavaScript frontend, the project demonstrates secure coding practices, client-server architecture, and modern web design principles.
 
 ---
 
@@ -90,6 +92,7 @@ Assumed attack speed: **10 billion guesses per second** (modern GPU cluster).
 | Breach API | HaveIBeenPwned (k-anonymity range endpoint) |
 | HTTP Client | httpx (async) |
 | Security | hashlib (SHA-1), secrets (CSPRNG) |
+| Deployment| Railway |
 
 ---
 
@@ -104,7 +107,7 @@ Assumed attack speed: **10 billion guesses per second** (modern GPU cluster).
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/CypherCraft.git
+git clone https://github.com/aryanshu1911/CypherCraft.git
 cd CypherCraft
 
 # Install dependencies
@@ -121,6 +124,19 @@ The app will start at **http://localhost:8001**
 ```bash
 uvicorn app:app --host 0.0.0.0 --port 8001 --reload
 ```
+
+---
+
+## ☁️ Deployment
+
+CypherCraft is production-ready and currently deployed on **Railway**.
+
+🌐 **Live Demo:** [https://cyphercraft.up.railway.app](https://cyphercraft.up.railway.app)
+
+The application uses FastAPI and Uvicorn, making it easy to deploy to PaaS providers (Railway, Render, Heroku). For example, on Railway:
+1. Connect your GitHub repository.
+2. Railway automatically detects the Python environment via `requirements.txt`.
+3. Set your start command (if not detected automatically) to: `uvicorn app:app --host 0.0.0.0 --port $PORT`
 
 ---
 
