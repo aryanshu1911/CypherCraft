@@ -2,14 +2,12 @@ services:
   - type: web
     name: cyphercraft-api
     env: python
-    region: oregon # or relevant closest region to the user
-    plan: free # Can be updated if they have higher tier plans
+    runtime: python-3.11.9
+    region: oregon
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn -k uvicorn.workers.UvicornWorker app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: FASTAPI_ENV
         value: production
-      # Define API Keys, Origins, etc. here if necessary.
-      # e.g., - key: CORS_ORIGINS 
-      #       value: https://my-frontend.domain.com
-    autoDeploy: true # Auto deploy on every push
+    autoDeploy: true
