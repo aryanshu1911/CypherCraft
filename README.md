@@ -92,7 +92,7 @@ Assumed attack speed: **10 billion guesses per second** (modern GPU cluster).
 | Breach API | HaveIBeenPwned (k-anonymity range endpoint) |
 | HTTP Client | httpx (async) |
 | Security | hashlib (SHA-1), secrets (CSPRNG) |
-| Deployment| Railway |
+| Deployment| Railway Cloud |
 
 ---
 
