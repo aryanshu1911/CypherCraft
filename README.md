@@ -2,7 +2,7 @@
 
 **Privacy-First Password Analyzer & Generator**
 
-🌐 **Live Demo:** ([https://cyphercraft.onrender.com/](https://cyphercraft.onrender.com/))
+🌐 **Live Demo:** [https://cyphercraft.onrender.com/](https://cyphercraft.onrender.com/)
 
 ---
 
